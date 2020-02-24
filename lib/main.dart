@@ -1,12 +1,19 @@
 import 'package:expenses_tracker/widgets/new_transaction.dart';
 import 'package:expenses_tracker/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'models/transaction.dart';
 import './widgets/chart.dart';
 
 // void main() => runApp(MyApp());
-void main() => runApp(MyApp());
+void main() {
+  // to allow only potrait mode and allow app to enter landscape mode even if device rotaion turned on
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //     id: 't2', title: 'Groceries', amount: 2000, date: DateTime.now())
   ];
 
+  bool _showChart = false;
+
   List<Transaction> get _recentTransactions {
     return _userTansactions.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
@@ -94,13 +103,25 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
+              Text('Show Chart'),
+              Switch(value: _showChart,onChanged: (val) {
+                setState(() {
+                  _showChart = val;
+                });
+              },)
+            ],),
             Container(
-                height: MediaQuery.of(context).size.height -
-                    appBar.preferredSize.height * 0.4,
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
                 child: Chart(_recentTransactions)),
             Container(
-              height: MediaQuery.of(context).size.height -
-                    appBar.preferredSize.height * 0.6,
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.7,
               child: TransactionList(
                 transactions: _userTansactions,
                 deleteTransaction: _deleteTransaction,

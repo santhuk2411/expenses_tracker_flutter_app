@@ -46,7 +46,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void _startAddingNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -88,6 +88,25 @@ class _MyHomePageState extends State<MyHomePage> {
       _userTansactions.removeWhere((tnx) => tnx.id == id);
     });
   }
+
+  // ---start ---handling Applifecycle
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
 
   Widget build(BuildContext context) {
     final isLandscape =
